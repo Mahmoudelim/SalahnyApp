@@ -63,7 +63,7 @@ fun salahlyAroundApp() {
     LaunchedEffect(Unit) {
         // Simulate navigation after splash screen delay (replace with your logic)
         kotlinx.coroutines.delay(2000) // Adjust delay as needed
-        navController.navigate("signUpClient")
+        navController.navigate("ClientLogin")
     }
 
     NavHost(navController = navController, startDestination = "splash",){
@@ -100,9 +100,7 @@ fun salahlyAroundApp() {
         composable("ClientLogin"){
             ClientLoginScreen(navController)
         }
-        composable("ClientLogin"){
-            ClientLoginScreen(navController)
-        }
+
         composable("ClientHome"){
             ClientHomeScreen(navController)
         }

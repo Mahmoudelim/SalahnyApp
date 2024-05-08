@@ -235,6 +235,8 @@ fun WelcomeScreenPreview() {
 
 @Composable
 fun ClientHomeScreen(navController: NavController) {
+    val vm=HomeViewModel()
+    val name=vm.getNameOfUser()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -249,7 +251,7 @@ fun ClientHomeScreen(navController: NavController) {
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Dear [Client's Name],\n\n")
+                        append("Dear $name,\n\n")
                     }
                     append("We're delighted to have you with us! 🌟 Tap on \"Categories\" to discover a range of services tailored just for you")
                 },

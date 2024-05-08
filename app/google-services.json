@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "206269146656",
+    "firebase_url": "https://irregular-worker-connections-default-rtdb.firebaseio.com",
+    "project_id": "irregular-worker-connections",
+    "storage_bucket": "irregular-worker-connections.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206269146656:android:e5afdc0ce9ed24866ffe45",
+        "android_client_info": {
+          "package_name": "com.khedma.salahny"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8n6-LSJZoL1okW57D1BkUP_H2wQmenGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

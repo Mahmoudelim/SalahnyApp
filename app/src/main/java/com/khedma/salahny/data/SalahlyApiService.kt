@@ -21,6 +21,8 @@ interface SalahlyApiService {
 
     @GET("client.gson")
     suspend fun getNearestClient(state: String,neighborhood:String):Call<List<Client>>
+    @GET("client/{email}.json")
+    suspend fun getUserData(@Query("email") email: String): Client
 
     @GET("worker.json")
     suspend fun getAllWorkers(): Map<String, Worker>

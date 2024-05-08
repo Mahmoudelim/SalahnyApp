@@ -10,7 +10,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,24 +17,18 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.khedma.salahny.SalahlyApplication
-import com.khedma.salahny.data.AuthResponse
 import com.khedma.salahny.data.Client
 import com.khedma.salahny.data.SalahlyApiService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class loginViewModel: ViewModel() {
+class workerViewModel :ViewModel(){
     val context: Context = SalahlyApplication.getApplicationContext()
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_data", Context.MODE_PRIVATE)
-    private var apiService:SalahlyApiService
+    private var apiService: SalahlyApiService
     init {
-        val retrofit :Retrofit=Retrofit.Builder()
+        val retrofit : Retrofit = Retrofit.Builder()
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
@@ -43,14 +36,14 @@ class loginViewModel: ViewModel() {
             .build()
         apiService=retrofit.create(SalahlyApiService::class.java)
     }
-    fun login(email: String, password: String, scaffoldState: ScaffoldState,navController: NavController) {
+    fun login(email: String, password: String, scaffoldState: ScaffoldState, navController: NavController) {
         val auth = FirebaseAuth.getInstance()
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     fetchUserData(email)
-                    navController.navigate("ClientHome")
+                    navController.navigate("WorkerHome")
 
                 } else {
                     viewModelScope.launch {
@@ -62,7 +55,7 @@ class loginViewModel: ViewModel() {
     }
 
     private fun fetchUserData(email: String) {
-        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("client")
+        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("worker")
 
         databaseReference.orderByChild("email").equalTo(email)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -70,7 +63,7 @@ class loginViewModel: ViewModel() {
                     for (data in snapshot.children) {
                         val userData = data.getValue(Client::class.java)
                         userData?.let { saveUserDataToSharedPreferences(it)
-                                      Log.i("dtalogin",userData.toString())
+                            Log.i("dtalogin",userData.toString())
                         }
                     }
                 }
@@ -84,13 +77,13 @@ class loginViewModel: ViewModel() {
 
     private fun saveUserDataToSharedPreferences(userData: Client) {
         with(sharedPreferences.edit()) {
-            putString("name", userData.name)
-            putString("email", userData.email)
-            putString("phone",userData.phone)
+            putString("workerName", userData.name)
+            putString("WorkerEmail", userData.email)
+            putString("workerPhone",userData.phone)
             apply()
         }
 
-}
+    }
 
     @Composable
     fun rememberScaffoldState(): ScaffoldState {
@@ -107,8 +100,5 @@ class loginViewModel: ViewModel() {
 
         return state
     }
-
-
-
 
 }

@@ -12,8 +12,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.khedma.salahny.R
+import com.khedma.salahny.prsentation.SignUp.SignUpForClient
 import com.khedma.salahny.ui.theme.blue
 
 @Composable
@@ -63,5 +66,11 @@ fun ProfileScreen() {
             Text(text = "Edit Profile")
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WelcomeScreenPreview() {
+    ProfileScreen()
 }
 

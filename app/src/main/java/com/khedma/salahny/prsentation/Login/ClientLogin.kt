@@ -7,13 +7,17 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +26,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,92 +40,66 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClientLoginScreen(navController: NavController) {
     val vm=loginViewModel()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    val emailState= remember { mutableStateOf("") }
-    val passwordState = remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val imeAction = remember { mutableStateOf(ImeAction.Done) }
-Column(modifier = Modifier.fillMaxSize()) {
-    Navbar()
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
+    var loading by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+    val scaffoldState = rememberScaffoldState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 80.dp, start = 16.dp, end = 16.dp)
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Email field
         OutlinedTextField(
-            value = emailState.value,
-            onValueChange = { emailState.value = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Email") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = "")
-
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Password field
         OutlinedTextField(
-            value = passwordState.value,
-            onValueChange = { passwordState.value = it },
+            value = password,
+            onValueChange = { password = it },
             label = { Text("Password") },
-            leadingIcon = {
-
-            },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = imeAction.value
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Login button
         Button(
             onClick = {
-                vm.login(email = emailState.value, passwordState.value) { success, message ->
-                    if (success) {
-                        // Login successful, navigate to the next screen or perform necessary actions
-                        Log.i("message",message.toString())
-                    } else {
-                        // Login failed, show an error message
-                        Log.i("message",message.toString())
-                    }
-                }
-            }
-                 ,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = blue, // Set background color
-                contentColor = Color.White // Set text color (optional)
-            )
+                loading = true
+                vm.login(email.text, password.text, scaffoldState,navController)
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Login")
+            Text("Login")
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Loading indicator
+        if (loading) {
+            CircularProgressIndicator(color = blue)
+        }
+
+        // Error message
+        error.takeIf { it.isNotEmpty() }?.let { errorMessage ->
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(errorMessage, color = Color.Red)
+        }
     }
 }
 
 
-}
+
 
 @Preview(showBackground = true)
 @Composable

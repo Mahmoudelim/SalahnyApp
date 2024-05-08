@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.khedma.salahny.SalahlyApplication
 import com.khedma.salahny.data.AlexanderiaNeghborhoods
 
@@ -68,7 +69,10 @@ class ClientSignUpViewModel : ViewModel() {
         neghiborhood:String
 
     ) {
-        if (isNameValid(name).equals(false) || isEmailValid(email).equals(false) || isPasswordValid(password).equals(false)) {
+        if (isNameValid(name).equals(false) || isEmailValid(email).equals(false) || isPasswordValid(
+                password
+            ).equals(false)
+        ) {
             _validationError.value = "Invalid input. Please check your data."
             return
         }
@@ -77,7 +81,7 @@ class ClientSignUpViewModel : ViewModel() {
         getUserLocation(context) { location ->
             location?.let {
 
-               val client = Client(name, phone, email, password, state, it, neghiborhood)
+                val client = Client(name, phone, email, password, state, it, neghiborhood)
                 // Continue with your registration logic
 
 
@@ -85,32 +89,47 @@ class ClientSignUpViewModel : ViewModel() {
                 val call: Call<Void> = apiService.registerClient(client)
 
 
-        // Assuming your registerClient method in SalahlyApiService takes a Client parameter
+                // Assuming your registerClient method in SalahlyApiService takes a Client parameter
 
 
-        // Asynchronously execute the POST request
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                // Handle successful registration
-                if (response.isSuccessful) {
+                // Asynchronously execute the POST request
+                call.enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        // Handle successful registration
+                        if (response.isSuccessful) {
 
-                    Log.i("respo", "ok")
+                            Log.i("respo", "ok")
+                        } else {
+                            Log.i("respo", "Error: ${response.code()}")
+                            response.errorBody()
+                            // You can extract error information from response.errorBody()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Log.i("respo", t.message.toString())
+
+
+                    }
+
+                })
+            }
+        }
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { authTask ->
+                if (authTask.isSuccessful) {
+                  Log.i("ClientSignUpViewModel","sucses")
                 } else {
-                    Log.i("respo", "Error: ${response.code()}")
-                    response.errorBody()
-                    // You can extract error information from response.errorBody()
+                    // Registration with Firebase Authentication failed
+                    Log.e(
+                        "ClientSignUpViewModel",
+                        "Registration failed: ${authTask.exception?.message}"
+                    )
                 }
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Log.i("respo", t.message.toString())
-
 
             }
-
-        })
-    }}}
-
+    }
     fun isPhoneValid(phone: String): Boolean{
         val validPhone=phone.length==11
         return validPhone
