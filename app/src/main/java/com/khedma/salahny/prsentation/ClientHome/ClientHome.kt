@@ -234,6 +234,29 @@ fun WelcomeScreenPreview() {
 }
 
 @Composable
+fun appBar(){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp)
+            .background(color = Color(R.color.dark_blue))
+    ) {
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center) {
+            Text(text = "Salahny" ,
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                ),)
+            Spacer(modifier = Modifier.width(10.dp))
+
+        }
+
+    }
+}
+
+@Composable
 fun ClientHomeScreen(navController: NavController) {
     val vm=HomeViewModel()
     val name=vm.getNameOfUser()
@@ -241,32 +264,9 @@ fun ClientHomeScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // First Part - Takes 70% of the screen height
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.3f)
-                .background(color = blue)
-        ) {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Dear $name,\n\n")
-                    }
-                    append("We're delighted to have you with us! 🌟 Tap on \"Categories\" to discover a range of services tailored just for you")
-                },
-                modifier = Modifier
-                    .padding(20.dp) // Adjust the padding as needed
-                    .fillMaxWidth(), // Makes the Text take the entire available width
-                style = TextStyle(
-                    fontFamily = FontFamily.Serif,
-                    fontSize = 16.sp,
-                    lineHeight = 24.sp,
-                    color = Color.Black
-                )
-            )
-
-        }
+        // First Part - Takes 20% of the screen height
+       appBar()
+       Spacer(modifier = Modifier.height(30.dp))
 
         // Second Part - Takes 30% of the screen height
         Box(

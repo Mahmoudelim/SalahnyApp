@@ -63,7 +63,7 @@ fun salahlyAroundApp() {
     LaunchedEffect(Unit) {
         // Simulate navigation after splash screen delay (replace with your logic)
         kotlinx.coroutines.delay(2000) // Adjust delay as needed
-        navController.navigate("ClientLogin")
+        navController.navigate("ClientHome")
     }
 
     NavHost(navController = navController, startDestination = "splash",){
