@@ -21,6 +21,7 @@ import com.khedma.salahny.SalahlyApplication
 import com.khedma.salahny.data.AuthResponse
 import com.khedma.salahny.data.Client
 import com.khedma.salahny.data.SalahlyApiService
+import com.khedma.salahny.data.SharedPreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -83,12 +84,9 @@ class loginViewModel: ViewModel() {
 
 
     private fun saveUserDataToSharedPreferences(userData: Client) {
-        with(sharedPreferences.edit()) {
-            putString("name", userData.name)
-            putString("email", userData.email)
-            putString("phone",userData.phone)
-            apply()
-        }
+        SharedPreferencesManager.name = userData.name
+        SharedPreferencesManager.email = userData.email
+        SharedPreferencesManager.phone = userData.phone
 
 }
 
