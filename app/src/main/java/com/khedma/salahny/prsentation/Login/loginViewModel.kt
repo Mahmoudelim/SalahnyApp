@@ -85,8 +85,11 @@ class loginViewModel: ViewModel() {
 
     private fun saveUserDataToSharedPreferences(userData: Client) {
         SharedPreferencesManager.name = userData.name
+        Log.i("naminlogin","name")
         SharedPreferencesManager.email = userData.email
         SharedPreferencesManager.phone = userData.phone
+        SharedPreferencesManager.State=userData.state
+        SharedPreferencesManager.neghborhood=userData.neghborhood
 
 }
 
