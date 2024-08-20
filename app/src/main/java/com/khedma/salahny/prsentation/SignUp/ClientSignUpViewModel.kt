@@ -66,7 +66,8 @@ class ClientSignUpViewModel : ViewModel() {
         email: String,
         password: String,
         state: String,
-        neghiborhood:String
+        neghiborhood:String,
+
 
     ) {
         if (isNameValid(name).equals(false) || isEmailValid(email).equals(false) || isPasswordValid(

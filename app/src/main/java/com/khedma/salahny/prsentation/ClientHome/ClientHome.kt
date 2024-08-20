@@ -1,6 +1,7 @@
 package com.khedma.salahny.prsentation.ClientHome
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,6 +46,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.khedma.salahny.R
 import com.khedma.salahny.data.CategoryItem
+import com.khedma.salahny.data.SharedPreferencesManager
+import com.khedma.salahny.data.SharedPreferencesManager.name
 
 @Composable
 fun CategoryItem(item: CategoryItem, onClick: () -> Unit) {
@@ -52,15 +55,18 @@ fun CategoryItem(item: CategoryItem, onClick: () -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(32.dp))
-             .drawBehind {
-            // Draw the shadow
-            drawRoundRect(
-                color = Color.Gray, // Change this to your desired shadow color
-                size = size.copy(width = size.width + 16.dp.toPx(), height = size.height + 16.dp.toPx()),
-                cornerRadius = CornerRadius(16.dp.toPx(), 16.dp.toPx()),
-                topLeft = Offset(32.dp.toPx(), 16.dp.toPx())
-            )
-        }
+            .drawBehind {
+                // Draw the shadow
+                drawRoundRect(
+                    color = Color.Gray, // Change this to your desired shadow color
+                    size = size.copy(
+                        width = size.width + 16.dp.toPx(),
+                        height = size.height + 16.dp.toPx()
+                    ),
+                    cornerRadius = CornerRadius(16.dp.toPx(), 16.dp.toPx()),
+                    topLeft = Offset(32.dp.toPx(), 16.dp.toPx())
+                )
+            }
             .background(color = colorResource(id = R.color.white))
             .clickable(onClick = onClick)
             .padding(32.dp)
@@ -149,7 +155,7 @@ fun BottomNavigationBar(navController: NavController) {
                     imageVector = Icons.Default.Home,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = if (selectedItem == "home") colorResource(id = R.color.BLUE) else Color.Gray
+                    tint = if (selectedItem == "home") colorResource(id = R.color.Blue) else Color.Gray
                 )
             },
             label = { Text("Home") },
@@ -221,7 +227,7 @@ fun AppBar() {
             Text(
                 text = "SALAHNY",
                 style = TextStyle(
-                    color =  colorResource(id = R.color.BLUE),
+                    color =  colorResource(id = R.color.Blue),
                     fontSize = 34.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -236,9 +242,19 @@ fun ClientHomeScreen(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        val name= SharedPreferencesManager.name.toString()
+        Log.i("name",name.toString())
         // First Part - Takes 20% of the screen height
-        AppBar()
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(text = "Welcome $name , If you need a service, press on the corresponding category",
+            style = TextStyle(
+                color =  colorResource(id = R.color.black),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            ) ,
+            modifier = Modifier.padding(15.dp)
+            )
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Second Part - Takes 30% of the screen height
         Box(
@@ -258,14 +274,7 @@ fun ClientHomeScreen(navController: NavController) {
                 CategoriesScreen(navController = navController)
             }
 
-            BottomAppBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .align(Alignment.BottomCenter)
-            ) {
-                BottomNavigationBar(navController = navController)
-            }
+
         }
     }
 }

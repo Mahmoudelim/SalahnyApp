@@ -12,10 +12,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,23 +32,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.khedma.salahny.R
+import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.data.Worker
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ElectricianListScreen(viewModel: CarpenterViewModel = viewModel()) {
+fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel()) {
     val context = LocalContext.current
-    var plumbers by remember { mutableStateOf<List<Worker>>(emptyList()) }
+    var Electrician by remember { mutableStateOf<List<Worker>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-
+    var searchQuery by remember { mutableStateOf(TextFieldValue(""))}
 
 
 
@@ -50,7 +61,7 @@ fun ElectricianListScreen(viewModel: CarpenterViewModel = viewModel()) {
         delay(2000)
 
         // Fetch data
-        plumbers = viewModel.getSortedWorker(context)
+        Electrician = viewModel.getSortedWorker(context)
 
         // After fetching data, set loading to false
         isLoading = false
@@ -65,17 +76,43 @@ fun ElectricianListScreen(viewModel: CarpenterViewModel = viewModel()) {
             CircularProgressIndicator()
         }
     } else {
-        // If not loading, display the list of plumbers
-        LazyColumn {
-            items(plumbers) { plumber ->
-                ElectricianItem(plumber)
+        Column(modifier = Modifier.padding(15.dp)) { 
+            
+          Text(text = "Available Electrician"
+          ,
+              style = MaterialTheme.typography.headlineLarge ,
+              color = Color.Gray
+              
+          )
+            Spacer(modifier = Modifier.height(8.dp))
+          OutlinedTextField(
+              value = searchQuery  ,
+              onValueChange = { searchQuery = it} ,
+              label = { Text(text = "Search") },
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(16.dp)
+
+          )
+            Spacer(modifier = Modifier.height(20.dp ))
+            val filteredElectrician = Electrician.filter {
+                it.name.contains(searchQuery.text)
+            }
+
+            // If not loading, display the list of plumbers
+            LazyColumn {
+                items(filteredElectrician) { plumber ->
+                    ElectricianItem(plumber)
+                }
             }
         }
     }
 }
 
 @Composable
-fun ElectricianItem(carpenter: Worker) {
+fun ElectricianItem(electricin: Worker) {
+    var isFavorite by remember { mutableStateOf(SharedPreferencesManager.getFavorites().any { it.name == electricin.name }) }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -94,7 +131,7 @@ fun ElectricianItem(carpenter: Worker) {
             // Display plumber image
             Image(
                 painter = painterResource(id = R.drawable.carpenter),
-                contentDescription = carpenter.name,
+                contentDescription = electricin.name,
                 modifier = Modifier
                     .size(80.dp)
                     .padding(end = 16.dp),
@@ -104,21 +141,21 @@ fun ElectricianItem(carpenter: Worker) {
             // Column for plumber details
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = carpenter.name,
+                    text = electricin.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = carpenter.phone,
+                    text = electricin.phone,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "${carpenter.neghborhood}, ${carpenter.state}",
+                    text = "${electricin.neghborhood}, ${electricin.state}",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium
@@ -127,6 +164,22 @@ fun ElectricianItem(carpenter: Worker) {
                 // You can add the rating here
                 // For example:
                 // RatingBar(rating = plumber.rating)
+            }
+            IconButton(
+                onClick = {
+                    if (isFavorite) {
+                        SharedPreferencesManager.removeFavorite(electricin)
+                    } else {
+                        SharedPreferencesManager.addFavorite(electricin)
+                    }
+                    isFavorite = !isFavorite
+                }
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                    tint = if (isFavorite) colorResource(id = R.color.Blue) else Color.Gray
+                )
             }
         }
     }

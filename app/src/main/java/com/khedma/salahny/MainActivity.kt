@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,17 +21,29 @@ import com.khedma.salahny.prsentation.SignUp.SignUpScreenForWorker
 import com.khedma.salahny.prsentation.WelcomeScreen.SplashScreen
 import com.khedma.salahny.prsentation.WelcomeScreen.WelcomeScreen
 import com.khedma.salahny.ui.theme.SalahnyTheme
-import com.google.accompanist.permissions.rememberPermissionState
 import com.khedma.salahny.data.RequestPermission
 import android.Manifest
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.khedma.salahny.prsentation.Categories.CarpenterDetailsScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterListScreen
+import com.khedma.salahny.prsentation.Categories.CarpenterViewModel
 import com.khedma.salahny.prsentation.Categories.ElectricianListScreen
 import com.khedma.salahny.prsentation.Categories.PainterListScreen
 import com.khedma.salahny.prsentation.Categories.PlumberListScreen
+import com.khedma.salahny.prsentation.Categories.WorkerViewModel
+import com.khedma.salahny.prsentation.ClientHome.AppBar
+import com.khedma.salahny.prsentation.ClientHome.BottomNavigationBar
 import com.khedma.salahny.prsentation.ClientHome.ClientHomeScreen
-import kotlinx.coroutines.delay
+import com.khedma.salahny.prsentation.Login.workerViewModel
+import com.khedma.salahny.prsentation.profile.FavoritesScreen
+import com.khedma.salahny.prsentation.profile.ProfileScreen
 
 class MainActivity : ComponentActivity() {
+    private val workerViewModel: WorkerViewModel by viewModels()
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                         RequestPermission(permission =  Manifest.permission.ACCESS_FINE_LOCATION)
-                        salahlyAroundApp()
+                        salahlyAroundApp(workerViewModel)
 
                     }
                 }
@@ -54,10 +65,10 @@ class MainActivity : ComponentActivity() {
     }
 
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun salahlyAroundApp() {
+fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
   val navController= rememberNavController()
 
     LaunchedEffect(Unit) {
@@ -65,45 +76,63 @@ fun salahlyAroundApp() {
         kotlinx.coroutines.delay(2000) // Adjust delay as needed
         navController.navigate("ClientHome")
     }
+    Scaffold(
+        topBar = {
+            AppBar()
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { innerPadding ->
+        NavHost(navController = navController, startDestination = "splash", Modifier.padding(innerPadding)) {
+            composable(route = "splash") {
+                SplashScreen()
+            }
+            composable(route = "favourite") {
+                FavoritesScreen()
+            }
+            composable(route = "ClientHome") {
+                ClientHomeScreen(navController = navController)
+            }
+            composable(route = "favourites") {
+                ClientHomeScreen(navController = navController)
+            }
+            composable(route = "profile") {
+                ProfileScreen(navController = navController)
+            }
+            composable("welcome") {
+                WelcomeScreen(navController = navController)
+            }
+            composable("location") {
+                RequestPermission(permission =  Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+            composable("signUpWorker") {
+                SignUpScreenForWorker(navController)
+            }
+            composable("Plumber") {
+                PlumberListScreen()
+            }
+            composable("Carpenter") {
 
-    NavHost(navController = navController, startDestination = "splash",){
-        composable(route="splash"){
-            SplashScreen()
-        }
-        composable(route="ClientHome"){
-            ClientHomeScreen(navController = navController)
-        }
-        composable("welcome") {
-            WelcomeScreen(navController = navController)
-        }
-        composable("location"){
-            RequestPermission(permission =  Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        composable("signUpWorker") {
-            SignUpScreenForWorker(navController)
-        }
-        composable("Plumber") {
-            PlumberListScreen()
-        }
-        composable("Carpenter") {
-         CarpenterListScreen()
-        }
-        composable("Painter") {
-           PainterListScreen()
-        }
-        composable("Electrician") {
-            ElectricianListScreen()
-        }
-        composable("signUpClient") {
-            SignUpForClient(navController = navController)
-        }
-        composable("ClientLogin"){
-            ClientLoginScreen(navController)
-        }
+               CarpenterListScreen(viewModel = CarpenterViewModel(), navController = navController, workrViewModel = workerViewModel)
+            }
+            composable("carpenterDetails") {
 
-        composable("ClientHome"){
-            ClientHomeScreen(navController)
-        }
+                CarpenterDetailsScreen(workerViewModel = workerViewModel)
+            }
+            composable("Painter") {
+                PainterListScreen()
+            }
+            composable("Electrician") {
+                ElectricianListScreen()
+            }
+            composable("signUpClient") {
+                SignUpForClient(navController = navController)
+            }
+            composable("ClientLogin") {
+                ClientLoginScreen(navController)
+            }
+    }
 
     }
 }
@@ -112,6 +141,6 @@ fun salahlyAroundApp() {
 @Composable
 fun GreetingPreview() {
     SalahnyTheme {
-       salahlyAroundApp()
+
     }
 }
