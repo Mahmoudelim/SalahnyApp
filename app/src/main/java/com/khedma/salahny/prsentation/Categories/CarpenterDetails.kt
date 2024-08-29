@@ -17,12 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.data.Worker
 import kotlinx.coroutines.delay
 
 @Composable
 fun CarpenterDetailsScreen(workerViewModel: WorkerViewModel) {
     val carpenter = workerViewModel.selectedWorker.observeAsState().value
+    val UserPhone= SharedPreferencesManager.phone
+    val userName=SharedPreferencesManager.name
+    val viewModel :CdetailsVM = viewModel()
     Log.i("selectWork", carpenter.toString())
 
     carpenter?.let {
@@ -49,7 +54,13 @@ fun CarpenterDetailsScreen(workerViewModel: WorkerViewModel) {
 
             // Button with blue color
             Button(
-                onClick = { /* Handle Request */ },
+                onClick = {
+                    if (UserPhone != null) {
+                        if (userName != null) {
+                            viewModel.OnRequest(it.phone, userPhone =UserPhone,userName  )
+                        }
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = com.khedma.salahny.R.color.Blue))
             ) {
                 Text(text = "Request Service", color = Color.White)

@@ -17,6 +17,11 @@ interface SalahlyApiService {
 
     @POST("worker.json") // Replace with your actual endpoint
     fun registerWorker(@Body worker: Worker): Call<Void>
+    @POST("userToken.json")
+    fun pushToken(@Body userToken: userToken): Call<Void>
+
+    @POST("Requests.json")
+    fun pushRequest(@Body request: Request): Call<Void>
 
 
     @GET("client.gson")

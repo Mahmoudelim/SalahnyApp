@@ -38,7 +38,9 @@ import com.khedma.salahny.prsentation.Categories.WorkerViewModel
 import com.khedma.salahny.prsentation.ClientHome.AppBar
 import com.khedma.salahny.prsentation.ClientHome.BottomNavigationBar
 import com.khedma.salahny.prsentation.ClientHome.ClientHomeScreen
+import com.khedma.salahny.prsentation.Login.WorkerLoginScreen
 import com.khedma.salahny.prsentation.Login.workerViewModel
+import com.khedma.salahny.prsentation.WorkerHome.workerHome
 import com.khedma.salahny.prsentation.profile.FavoritesScreen
 import com.khedma.salahny.prsentation.profile.ProfileScreen
 
@@ -74,7 +76,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
     LaunchedEffect(Unit) {
         // Simulate navigation after splash screen delay (replace with your logic)
         kotlinx.coroutines.delay(2000) // Adjust delay as needed
-        navController.navigate("ClientHome")
+        navController.navigate("ClientLogin")
     }
     Scaffold(
         topBar = {
@@ -131,6 +133,12 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             }
             composable("ClientLogin") {
                 ClientLoginScreen(navController)
+            }
+            composable("WorkerLogin") {
+                WorkerLoginScreen(navController)
+            }
+            composable("WorkerHome") {
+                workerHome(navController)
             }
     }
 

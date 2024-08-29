@@ -32,14 +32,7 @@ fun workerHome(navController :NavController){
 
         AvailabilitySection()
 
-        BottomAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            BottomNavigationBar(navController = navController)
-        }
+
     }
 }
 @Composable
