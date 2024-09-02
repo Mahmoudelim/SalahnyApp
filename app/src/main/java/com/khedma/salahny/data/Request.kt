@@ -7,6 +7,8 @@ data class Request(
     val phone: String = "",
     @SerializedName("name")
     val name: String = "",
-    @SerializedName("from")
-    val from: String = "",
+    @SerializedName("workerPhone")
+    val workerPhone: String = "",
+    @SerializedName("imageRes")
+    val imageRes: String = "",
 )

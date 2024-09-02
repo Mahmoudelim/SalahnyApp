@@ -91,6 +91,7 @@ class loginViewModel: ViewModel() {
         SharedPreferencesManager.phone = userData.phone
         SharedPreferencesManager.State=userData.state
         SharedPreferencesManager.neghborhood=userData.neghborhood
+        SharedPreferencesManager.ImgRes=userData.imageRes
 
 }
 

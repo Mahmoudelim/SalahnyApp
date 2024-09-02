@@ -17,7 +17,11 @@ data class Client(
     @SerializedName("location")
     val location: Location=Location(0.0,0.0) , // Assuming Location is another data class
     @SerializedName("neghborhood")
-    val neghborhood: String = ""
+    val neghborhood: String = "",
+    @SerializedName("imageRes")
+    val imageRes: String = ""
+
+
 )
 {
     constructor() : this("", "", "", "", "", Location(0.0,0.0), "")

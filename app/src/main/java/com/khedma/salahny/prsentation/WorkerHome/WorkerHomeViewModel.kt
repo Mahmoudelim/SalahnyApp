@@ -1,6 +1,8 @@
 package com.khedma.salahny.prsentation.WorkerHome
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -9,30 +11,40 @@ import com.google.firebase.database.ValueEventListener
 
 class WorkerHomeViewModel :ViewModel() {
 
-    fun GetAvalibty(): Boolean{
-        val email=""
-        var availability:Boolean=true
+    private val _availability = MutableLiveData<Boolean>()
+    val availability: LiveData<Boolean> = _availability
+    fun getAvailability(email: String) {
         val database = FirebaseDatabase.getInstance()
         val reference = database.getReference("worker")
         reference.orderByChild("email").equalTo(email)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    // Loop through the snapshots
                     for (data in snapshot.children) {
-                        // Retrieve the "availability" attribute from the data snapshot
-                         availability = data.child("availability").value as Boolean
-                        // Use the retrieved availability
-                        Log.i("Client Availability", "$availability")
+                        val isAvailable = data.child("availability").getValue(Boolean::class.java) ?: true
+                        _availability.value = isAvailable
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Handle any errors
-                    println("Failed to read value: ${error.message}")
+                    Log.e("WorkerHomeViewModel", "Failed to read availability: ${error.message}")
                 }
             })
-
-   return availability
     }
-     fun changeAvalibality(){}
+    fun changeAvailability(email: String, newStatus: Boolean) {
+        val database = FirebaseDatabase.getInstance()
+        val reference = database.getReference("worker")
+        reference.orderByChild("email").equalTo(email)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (data in snapshot.children) {
+                        data.ref.child("availability").setValue(newStatus)
+                        _availability.value = newStatus
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("WorkerHomeViewModel", "Failed to update availability: ${error.message}")
+                }
+            })
+    }
 }

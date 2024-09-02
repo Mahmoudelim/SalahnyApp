@@ -21,6 +21,10 @@ object SharedPreferencesManager {
         get() = sharedPreferences.getString("email", "")
         set(value) = sharedPreferences.edit().putString("email", value).apply()
 
+    var ImgRes: String?
+        get() = sharedPreferences.getString("ImgRes", "")
+        set(value) = sharedPreferences.edit().putString("ImgRes", value).apply()
+
     var phone: String?
         get() = sharedPreferences.getString("phone", "")
         set(value) = sharedPreferences.edit().putString("phone", value).apply()

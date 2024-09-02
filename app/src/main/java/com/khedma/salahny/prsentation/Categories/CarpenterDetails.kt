@@ -26,6 +26,7 @@ import kotlinx.coroutines.delay
 fun CarpenterDetailsScreen(workerViewModel: WorkerViewModel) {
     val carpenter = workerViewModel.selectedWorker.observeAsState().value
     val UserPhone= SharedPreferencesManager.phone
+    val UserImg= SharedPreferencesManager.ImgRes
     val userName=SharedPreferencesManager.name
     val viewModel :CdetailsVM = viewModel()
     Log.i("selectWork", carpenter.toString())
@@ -57,7 +58,9 @@ fun CarpenterDetailsScreen(workerViewModel: WorkerViewModel) {
                 onClick = {
                     if (UserPhone != null) {
                         if (userName != null) {
-                            viewModel.OnRequest(it.phone, userPhone =UserPhone,userName  )
+                            if (UserImg != null) {
+                                viewModel.OnRequest(it.phone, userPhone =UserPhone,userName, imgRes =UserImg )
+                            }
                         }
                     }
                 },
