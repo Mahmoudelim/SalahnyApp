@@ -25,9 +25,22 @@ import com.khedma.salahny.data.RequestPermission
 import android.Manifest
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.khedma.salahny.WorkerRequests.RequestScreen
+import com.khedma.salahny.WorkerRequests.requestViewModel
+import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.prsentation.Categories.CarpenterDetailsScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterListScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterViewModel
@@ -71,19 +84,36 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
-  val navController= rememberNavController()
+    val navController= rememberNavController()
+    val isLoggedIn = SharedPreferencesManager.email?.isNotEmpty() == true
+    val userRole = SharedPreferencesManager.userRole
+
+    val startDestination = if (isLoggedIn) {
+        when (userRole) {
+            "worker" -> "WorkerHome"
+            "client" -> "ClientHome"
+            else -> "welcome"
+        }
+    } else {
+        "welcome"
+    }
 
     LaunchedEffect(Unit) {
         // Simulate navigation after splash screen delay (replace with your logic)
         kotlinx.coroutines.delay(2000) // Adjust delay as needed
-        navController.navigate("ClientLogin")
+        navController.navigate(startDestination)
     }
     Scaffold(
         topBar = {
             AppBar()
         },
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            if (isLoggedIn) {
+                when (userRole) {
+                    "worker" -> WorkerBottomNavigationBar(navController = navController)
+                    "client" -> BottomNavigationBar(navController = navController)
+                }
+            }
         }
     ) { innerPadding ->
         NavHost(navController = navController, startDestination = "splash", Modifier.padding(innerPadding)) {
@@ -108,7 +138,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             composable("location") {
                 RequestPermission(permission =  Manifest.permission.ACCESS_FINE_LOCATION)
             }
-            composable("signUpWorker") {
+            composable("signUpworker") {
                 SignUpScreenForWorker(navController)
             }
             composable("Plumber") {
@@ -128,7 +158,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             composable("Electrician") {
                 ElectricianListScreen()
             }
-            composable("signUpClient") {
+            composable("signUpclient") {
                 SignUpForClient(navController = navController)
             }
             composable("ClientLogin") {
@@ -140,8 +170,47 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             composable("WorkerHome") {
                 workerHome(navController)
             }
+            composable("requests") {
+                val workerPhone=SharedPreferencesManager.phone
+                RequestScreen(requestViewModel() , workerPhone.toString())
+            }
     }
 
+
+    }
+
+
+
+}
+
+@Composable
+fun WorkerBottomNavigationBar(navController: NavController) {
+    BottomNavigation {
+        // Define your worker-specific navigation items here
+        BottomNavigationItem(
+            label = { Text("Home") },
+            icon = { Icon(Icons.Default.Home, contentDescription = null) },
+            selected = false,
+            onClick = {
+                navController.navigate("WorkerHome")
+            }
+        )
+        BottomNavigationItem(
+            label = { Text("Requests") },
+            icon = { Icon(Icons.Default.List, contentDescription = null) },
+            selected = false,
+            onClick = {
+                navController.navigate("WorkerRequests")
+            }
+        )
+        BottomNavigationItem(
+            label = { Text("Profile") },
+            icon = { Icon(Icons.Default.Person, contentDescription = null) },
+            selected = false,
+            onClick = {
+                navController.navigate("profile")
+            }
+        )
     }
 }
 

@@ -2,6 +2,7 @@ package com.khedma.salahny.prsentation.WelcomeScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -44,7 +46,7 @@ fun WelcomeScreen(navController: NavController) {
     var selectedRole = rememberSaveable { mutableStateOf<UserRole?>(null) }
     LazyColumn(modifier = Modifier.fillMaxSize()){
         item {
-            welcomeContent()
+            WelcomeContent()
             Spacer(modifier = Modifier.height(5.dp))
             RoleSelection(selectedRole = selectedRole, onRoleSelected = {},navController)
         }
@@ -55,47 +57,58 @@ fun WelcomeScreen(navController: NavController) {
     }
 }
 @Composable
-fun welcomeContent() {
 
-    Box(modifier = Modifier.padding(top = 50.dp, bottom = 50.dp)){
+fun WelcomeContent() {
+    // Use Box to allow flexible positioning
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+            ) {
                 Text(
-                    text = "Welcome to Salahly!",
+                    text = "Welcome to Salahny!",
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text =
-                            "Need help? Find reliable workers nearby for any task.\n" +
-                            "Looking for work? Discover flexible jobs that fit your skills and schedule. .\n" +
+                    text = "Need help? Find reliable workers nearby for any task.\n" +
+                            "Looking for work? Discover flexible jobs that fit your skills and schedule.\n" +
                             "Join us today!",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(3.dp))
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
-            Spacer(modifier = Modifier.width(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.myicon),
                 contentDescription = "App icon",
                 modifier = Modifier
-                    .size(150.dp) // Adjust size as needed
-                    .align(CenterVertically)
+                    .size(120.dp) // Adjust size as needed
+                    .align(Alignment.CenterVertically)
             )
         }
     }
 }
+
 @Composable
 fun RoleSelection(
     selectedRole: MutableState<UserRole?>,
-    onRoleSelected: (UserRole) -> Unit // Function to update view model
-    ,navController: NavController
+    onRoleSelected: (UserRole) -> Unit,
+    navController: NavController
 ) {
-    Column(modifier = Modifier.padding(20.dp)) {
-        Text("Choose if you Worker or Client")
+    val vm = WelcomeScreenViewModel()
+
+    Column(modifier = Modifier.padding(10.dp)) {
+        Text("Choose if you are a Worker or Client")
         Spacer(modifier = Modifier.height(5.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -103,7 +116,7 @@ fun RoleSelection(
                 selected = selectedRole.value == UserRole.WORKER,
                 onClick = {
                     selectedRole.value = UserRole.WORKER
-                    onRoleSelected(UserRole.WORKER) // Update view model
+                    onRoleSelected(UserRole.WORKER)
                 },
                 colors = RadioButtonDefaults.colors(
                     selectedColor = blue,
@@ -116,7 +129,7 @@ fun RoleSelection(
                 selected = selectedRole.value == UserRole.CLIENT,
                 onClick = {
                     selectedRole.value = UserRole.CLIENT
-                    onRoleSelected(UserRole.CLIENT) // Update view model
+                    onRoleSelected(UserRole.CLIENT)
                 },
                 colors = RadioButtonDefaults.colors(
                     selectedColor = Color.Blue,
@@ -124,16 +137,24 @@ fun RoleSelection(
                 )
             )
             Text("Client")
-
         }
+
         Spacer(modifier = Modifier.height(5.dp))
+
         Column(modifier = Modifier.padding(20.dp)) {
-            Text(text = "New to Salahny? Create an account to unlock the possibilities! ")
+            Text(text = "New to Salahny? Create an account to unlock the possibilities!")
             Spacer(modifier = Modifier.height(15.dp))
-            Button(onClick = { navController.navigate("signUp${selectedRole.value}") }, modifier = Modifier.align(CenterHorizontally),
+
+            Button(
+                onClick = {
+                    selectedRole.value?.let {
+                        vm.setUserRoleAndNavigate(it, navController)
+                    }
+                },
+                modifier = Modifier.align(CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = blue, // Set background color
-                    contentColor = Color.White // Set text color (optional)
+                    containerColor = blue,
+                    contentColor = Color.White
                 )
             ) {
                 Text(text = "Sign Up")

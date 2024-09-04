@@ -13,6 +13,11 @@ object SharedPreferencesManager {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
+    var userRole: String?
+        get() = sharedPreferences.getString("userRole", "")
+        set(value) = sharedPreferences.edit().putString("userRole", value).apply()
+
+
     var name: String?
         get() = sharedPreferences.getString("name", "")
         set(value) = sharedPreferences.edit().putString("name", value).apply()
