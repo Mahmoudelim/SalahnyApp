@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 import com.khedma.salahny.SalahlyApplication
 import com.khedma.salahny.data.Client
 import com.khedma.salahny.data.SalahlyApiService
+import com.khedma.salahny.data.Worker
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,7 +39,6 @@ class workerViewModel :ViewModel(){
     }
     fun login(email: String, password: String, scaffoldState: ScaffoldState, navController: NavController) {
         val auth = FirebaseAuth.getInstance()
-
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -53,7 +53,6 @@ class workerViewModel :ViewModel(){
                 }
             }
     }
-
     private fun fetchUserData(email: String) {
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("worker")
 
@@ -61,7 +60,7 @@ class workerViewModel :ViewModel(){
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (data in snapshot.children) {
-                        val userData = data.getValue(Client::class.java)
+                        val userData = data.getValue(Worker::class.java)
                         userData?.let { saveUserDataToSharedPreferences(it)
                             Log.i("dtalogin",userData.toString())
                         }
@@ -75,7 +74,17 @@ class workerViewModel :ViewModel(){
     }
 
 
-    private fun saveUserDataToSharedPreferences(userData: Client) {
+
+
+
+
+
+
+
+
+
+
+    private fun saveUserDataToSharedPreferences(userData: Worker) {
         with(sharedPreferences.edit()) {
             putString("workerName", userData.name)
             putString("WorkerEmail", userData.email)

@@ -69,8 +69,8 @@ fun CategoryItem(item: CategoryItem, onClick: () -> Unit) {
             }
             .background(color = colorResource(id = R.color.white))
             .clickable(onClick = onClick)
-            .padding(32.dp)
-            .width(100.dp)
+            .padding(22.dp)
+            .width(60.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -88,7 +88,7 @@ fun CategoryItem(item: CategoryItem, onClick: () -> Unit) {
                         .clip(shape = CircleShape)
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = item.name,
                 textAlign = TextAlign.Center,
@@ -245,30 +245,28 @@ fun ClientHomeScreen(navController: NavController) {
         val name= SharedPreferencesManager.name.toString()
         Log.i("name",name.toString())
         // First Part - Takes 20% of the screen height
-        Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Welcome $name , If you need a service, press on the corresponding category",
             style = TextStyle(
                 color =  colorResource(id = R.color.black),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             ) ,
-            modifier = Modifier.padding(15.dp)
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp,top=5.dp, bottom = 5.dp)
             )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         // Second Part - Takes 30% of the screen height
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(900.dp)
-                .weight(0.8f),
+                .weight(1.5f),
 
 
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp)
+                    .padding(top = 15.dp)
                     .align(Alignment.TopCenter)
             ) {
                 CategoriesScreen(navController = navController)

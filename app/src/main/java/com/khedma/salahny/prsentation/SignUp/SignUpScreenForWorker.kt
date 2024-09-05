@@ -211,7 +211,7 @@ fun FormForWorker(navController: NavController) {
                         password.value,profession.value,state.value,neghborhood.value)
 
                     if (vm.validationError.value==null) {
-                        navController.navigate("ClientHome")
+                        navController.navigate("WorkerLogin")
                     }
                     else
                     {

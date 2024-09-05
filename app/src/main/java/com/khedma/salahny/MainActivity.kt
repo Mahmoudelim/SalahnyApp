@@ -23,6 +23,7 @@ import com.khedma.salahny.prsentation.WelcomeScreen.WelcomeScreen
 import com.khedma.salahny.ui.theme.SalahnyTheme
 import com.khedma.salahny.data.RequestPermission
 import android.Manifest
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
@@ -53,6 +54,7 @@ import com.khedma.salahny.prsentation.ClientHome.BottomNavigationBar
 import com.khedma.salahny.prsentation.ClientHome.ClientHomeScreen
 import com.khedma.salahny.prsentation.Login.WorkerLoginScreen
 import com.khedma.salahny.prsentation.Login.workerViewModel
+import com.khedma.salahny.prsentation.WelcomeScreen.UserRole
 import com.khedma.salahny.prsentation.WorkerHome.workerHome
 import com.khedma.salahny.prsentation.profile.FavoritesScreen
 import com.khedma.salahny.prsentation.profile.ProfileScreen
@@ -89,10 +91,12 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
     val userRole = SharedPreferencesManager.userRole
 
     val startDestination = if (isLoggedIn) {
+        Log.i("role","$userRole")
         when (userRole) {
-            "worker" -> "WorkerHome"
+
+            "WORKER" -> "WorkerHome"
             "client" -> "ClientHome"
-            else -> "welcome"
+            else -> "WorkerLogin"
         }
     } else {
         "welcome"
@@ -110,7 +114,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
         bottomBar = {
             if (isLoggedIn) {
                 when (userRole) {
-                    "worker" -> WorkerBottomNavigationBar(navController = navController)
+                    "WORKER" -> WorkerBottomNavigationBar(navController = navController)
                     "client" -> BottomNavigationBar(navController = navController)
                 }
             }

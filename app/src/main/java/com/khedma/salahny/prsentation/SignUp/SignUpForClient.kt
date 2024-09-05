@@ -221,7 +221,7 @@ fun FormForClient(navController: NavController) {
                         neghborhood.value
                     )
                     if (vm.validationError.value==null) {
-                        navController.navigate("ClientHome")
+                        navController.navigate("ClientLogin")
                     }
                     else
                     {
