@@ -1,5 +1,6 @@
 package com.khedma.salahny.WorkerRequests
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ class requestViewModel : ViewModel() {
 
     fun fetchRequests(workerPhone: String) {
         val database = FirebaseDatabase.getInstance()
-        val reference = database.getReference("requests")
+        val reference = database.getReference("Requests")
 
         reference.orderByChild("workerPhone").equalTo(workerPhone)
             .addValueEventListener(object : ValueEventListener {
@@ -24,11 +25,13 @@ class requestViewModel : ViewModel() {
                     val requestList = mutableListOf<Request>()
                     for (data in snapshot.children) {
                         val request = data.getValue(Request::class.java)
+                        Log.i("req", "$request")  // Log each request
                         if (request != null) {
                             requestList.add(request)
                         }
                     }
                     _requests.value = requestList
+                    Log.i("RequestViewModel", "Fetched requests: $requestList")  // Log the full list after updating LiveData
                 }
 
                 override fun onCancelled(error: DatabaseError) {

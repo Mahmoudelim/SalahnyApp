@@ -12,4 +12,8 @@ data class Worker(
     val isAvailable:Boolean,
     val rating: Double,
     val imageRes:Int
+
 )
+{
+    constructor() : this("", "", "", "", "", "","",Location(0.0,0.0),true ,0.0,0)
+}

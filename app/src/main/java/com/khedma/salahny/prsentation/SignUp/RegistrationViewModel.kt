@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.khedma.salahny.R
 import com.khedma.salahny.SalahlyApplication
 import com.khedma.salahny.data.AlexanderiaNeghborhoods
@@ -66,7 +67,7 @@ class RegistrationViewModel :ViewModel(){
             location?.let {
 
                 val Worker = Worker(name,email,phone,password,proffesion, state,neghiborhood ,it,false,0.0,
-                    R.drawable.plumber )
+                    R.drawable.plumber)
                 // Continue with your registration logic
 
 
@@ -98,7 +99,22 @@ class RegistrationViewModel :ViewModel(){
                     }
 
                 })
-            }}}
+            }}
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { authTask ->
+                if (authTask.isSuccessful) {
+                    Log.i("WorkerViewModel","sucses")
+                } else {
+                    // Registration with Firebase Authentication failed
+                    Log.e(
+                        "WorkerViewModel",
+                        "Registration failed: ${authTask.exception?.message}"
+                    )
+                }
+
+            }
+
+    }
 
     fun isPhoneValid(phone: String): Boolean{
         val validPhone=phone.length==11

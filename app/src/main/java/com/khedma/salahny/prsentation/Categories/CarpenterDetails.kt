@@ -41,7 +41,7 @@ fun CarpenterDetailsScreen(workerViewModel: WorkerViewModel) {
         ) {
             // Display the carpenter's image
             Image(
-                painter = painterResource(id = it.imageRes), // Assuming imageResId is in Worker object
+                painter = painterResource(id =  com.khedma.salahny.R.drawable.plumber), // Assuming imageResId is in Worker object
                 contentDescription = it.name,
                 modifier = Modifier
                     .size(150.dp)

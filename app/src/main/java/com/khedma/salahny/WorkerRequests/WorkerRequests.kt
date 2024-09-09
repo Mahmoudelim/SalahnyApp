@@ -1,5 +1,6 @@
 package com.khedma.salahny.WorkerRequests
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import com.khedma.salahny.data.Request
 
@@ -11,15 +12,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 @Composable
 fun RequestScreen(viewModel: requestViewModel, workerPhone: String) {
     // Call to fetch the requests
+    val requests by viewModel.requests.observeAsState(emptyList())
     LaunchedEffect(workerPhone) {
         viewModel.fetchRequests(workerPhone)
+        Log.i("RequestScreenp", "Fetching requests for worker: $workerPhone")
+        delay(1000)
+        Log.i("RequestScreen", "Fetching requests for worker: $requests")
     }
 
-    val requests by viewModel.requests.observeAsState(emptyList())
+
+
 
     Column(
         modifier = Modifier
@@ -32,17 +39,16 @@ fun RequestScreen(viewModel: requestViewModel, workerPhone: String) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        if (requests.isEmpty()) {
-            Text(text = "No requests available")
-        } else {
+
             LazyColumn {
                 items(requests) { request ->
                     RequestItem(request)
                 }
             }
         }
+
     }
-}
+
 
 @Composable
 fun RequestItem(request: Request) {
