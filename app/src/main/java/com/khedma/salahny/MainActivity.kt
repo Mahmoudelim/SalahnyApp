@@ -36,6 +36,13 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -61,6 +68,8 @@ import com.khedma.salahny.prsentation.profile.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     private val workerViewModel: WorkerViewModel by viewModels()
+    private val requestViewModel: requestViewModel by viewModels()
+
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +82,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                         RequestPermission(permission =  Manifest.permission.ACCESS_FINE_LOCATION)
-                        salahlyAroundApp(workerViewModel)
+                        salahlyAroundApp(workerViewModel, requestViewModel =requestViewModel )
 
                     }
                 }
@@ -85,16 +94,16 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
+fun salahlyAroundApp(workerViewModel: WorkerViewModel,requestViewModel: requestViewModel) {
     val navController= rememberNavController()
     val isLoggedIn = SharedPreferencesManager.email?.isNotEmpty() == true
     val userRole = SharedPreferencesManager.userRole
-
+    Log.i("usrole","$userRole")
     val startDestination = if (isLoggedIn) {
-        Log.i("role","$userRole")
+        Log.i("usrole","$userRole")
         when (userRole) {
 
-            "WORKER" -> "WorkerHome"
+            "worker" -> "WorkerHome"
             "client" -> "ClientHome"
             else -> "WorkerLogin"
         }
@@ -114,7 +123,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
         bottomBar = {
             if (isLoggedIn) {
                 when (userRole) {
-                    "WORKER" -> WorkerBottomNavigationBar(navController = navController)
+                    "worker" -> WorkerBottomNavigationBar(navController = navController)
                     "client" -> BottomNavigationBar(navController = navController)
                 }
             }
@@ -130,9 +139,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             composable(route = "ClientHome") {
                 ClientHomeScreen(navController = navController)
             }
-            composable(route = "favourites") {
-                ClientHomeScreen(navController = navController)
-            }
+
             composable(route = "profile") {
                 ProfileScreen(navController = navController)
             }
@@ -176,7 +183,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
             }
             composable("requests") {
                 val workerPhone=SharedPreferencesManager.phone
-                RequestScreen(requestViewModel() , workerPhone.toString())
+                RequestScreen(requestViewModel , workerPhone.toString())
             }
     }
 
@@ -189,29 +196,33 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel) {
 
 @Composable
 fun WorkerBottomNavigationBar(navController: NavController) {
-    BottomNavigation {
+    BottomNavigation( backgroundColor = MaterialTheme.colorScheme.background) {
         // Define your worker-specific navigation items here
+        var selectedItem by remember { mutableStateOf("home") }
         BottomNavigationItem(
             label = { Text("Home") },
-            icon = { Icon(Icons.Default.Home, contentDescription = null) },
-            selected = false,
+            icon = { Icon(Icons.Default.Home, contentDescription = null,   tint = if (selectedItem == "home") colorResource(id = R.color.Blue) else Color.Gray) },
+            selected =selectedItem == "home",
             onClick = {
+                selectedItem="home"
                 navController.navigate("WorkerHome")
             }
         )
         BottomNavigationItem(
             label = { Text("Requests") },
-            icon = { Icon(Icons.Default.List, contentDescription = null) },
-            selected = false,
+            icon = { Icon(Icons.Default.List, contentDescription = null , tint = if (selectedItem == "Requests") colorResource(id = R.color.Blue) else Color.Gray) },
+            selected = selectedItem == "Requests",
             onClick = {
-                navController.navigate("WorkerRequests")
+                selectedItem ="Requests"
+                navController.navigate("requests")
             }
         )
         BottomNavigationItem(
             label = { Text("Profile") },
-            icon = { Icon(Icons.Default.Person, contentDescription = null) },
-            selected = false,
+            icon = { Icon(Icons.Default.Person, contentDescription = null, tint = if (selectedItem == "profile") MaterialTheme.colorScheme.primary else Color.Gray) },
+            selected = selectedItem == "profile",
             onClick = {
+                selectedItem="profile"
                 navController.navigate("profile")
             }
         )

@@ -3,6 +3,7 @@ package com.khedma.salahny.prsentation.WorkerHome
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,7 @@ import com.khedma.salahny.ui.theme.blue
 
 @Composable
 fun workerHome(navController :NavController){
-    Column {
+    Column(Modifier.fillMaxSize().padding(top =  30.dp), verticalArrangement = Arrangement.Top, ) {
 
         AvailabilitySection()
 
@@ -47,12 +48,12 @@ fun AvailabilitySection() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp) ,
+            .padding(20.dp) ,
         Arrangement.Center ,
 
     ) {
         Text(
-            text = "Your Availability",
+            text = "Update Your Availability",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 12.dp, top = 12.dp)
         )

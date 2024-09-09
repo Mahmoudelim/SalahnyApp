@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 import com.khedma.salahny.SalahlyApplication
 import com.khedma.salahny.data.Client
 import com.khedma.salahny.data.SalahlyApiService
+import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.data.Worker
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -85,12 +86,15 @@ class workerViewModel :ViewModel(){
 
 
     private fun saveUserDataToSharedPreferences(userData: Worker) {
-        with(sharedPreferences.edit()) {
-            putString("workerName", userData.name)
-            putString("WorkerEmail", userData.email)
-            putString("workerPhone",userData.phone)
-            apply()
-        }
+
+            SharedPreferencesManager.name = userData.name
+            Log.i("naminlogin","name")
+            SharedPreferencesManager.email = userData.email
+            SharedPreferencesManager.phone = userData.phone
+            SharedPreferencesManager.State=userData.state
+            SharedPreferencesManager.neghborhood=userData.neghborhood
+
+
 
     }
 

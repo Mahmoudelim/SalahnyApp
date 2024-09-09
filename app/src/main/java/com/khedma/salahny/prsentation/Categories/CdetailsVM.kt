@@ -64,7 +64,7 @@ class CdetailsVM : ViewModel(){
 
     fun OnRequest(workerPhone: String,userPhone:String,userName:String,imgRes:String){
         sendRequestToWorker(workerPhone,userPhone,userName)
-        val request=Request(userPhone,userName,workerPhone,imgRes)
+        val request=Request(userPhone,userName,workerPhone)
         val call: Call<Void> = apiService.pushRequest(request)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

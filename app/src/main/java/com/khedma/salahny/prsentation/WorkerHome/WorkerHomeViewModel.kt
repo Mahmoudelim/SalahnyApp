@@ -37,7 +37,7 @@ class WorkerHomeViewModel :ViewModel() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (data in snapshot.children) {
-                        data.ref.child("availability").setValue(newStatus)
+                        data.ref.child("isAvailable").setValue(newStatus)
                         _availability.value = newStatus
                     }
                 }

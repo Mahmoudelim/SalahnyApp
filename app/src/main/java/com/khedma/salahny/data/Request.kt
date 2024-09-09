@@ -11,4 +11,6 @@ data class Request(
     val workerPhone: String = "",
     @SerializedName("imageRes")
     val imageRes: String = "",
+
+
 )

@@ -15,6 +15,7 @@ import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -70,7 +71,7 @@ fun CategoryItem(item: CategoryItem, onClick: () -> Unit) {
             .background(color = colorResource(id = R.color.white))
             .clickable(onClick = onClick)
             .padding(22.dp)
-            .width(60.dp)
+            .width(80.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -169,17 +170,17 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavigationItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Search,
+                    imageVector = Icons.Default.Favorite,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = if (selectedItem == "search") MaterialTheme.colorScheme.primary else Color.Gray
+                    tint = if (selectedItem == "Favourite") colorResource(id = R.color.Blue) else Color.Gray
                 )
             },
-            label = { Text("Search") },
-            selected = selectedItem == "search",
+            label = { Text("Favourite") },
+            selected = selectedItem == "Favourite",
             onClick = {
-                selectedItem = "search"
-                navController.navigate("search")
+                selectedItem = "Favourite"
+                navController.navigate("favourite")
             }
         )
 
