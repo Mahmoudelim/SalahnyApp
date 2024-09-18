@@ -1,7 +1,9 @@
 package com.khedma.salahny.prsentation.Categories
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.khedma.salahny.R
 import com.khedma.salahny.data.SharedPreferencesManager
@@ -63,7 +66,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlumberListScreen(viewModel: PlumberCatViewModel = viewModel()) {
+fun PlumberListScreen(viewModel: PlumberCatViewModel = viewModel() , navController: NavController,workerViewModel: WorkerViewModel) {
     val context = LocalContext.current
     var plumbers by remember { mutableStateOf<List<Worker>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -116,8 +119,15 @@ fun PlumberListScreen(viewModel: PlumberCatViewModel = viewModel()) {
                 it.name.contains(searchQuery.text, ignoreCase = true)
             }
             LazyColumn {
-                items(filteredPlumbers) { plumber ->
-                    PlumberItem(plumber)
+                items(filteredPlumbers) { carpenter ->
+                    PlumberItem(carpenter) {
+                            selectedWorker ->
+                        // Set the selected worker in the ViewModel
+                        workerViewModel.selectWorker(selectedWorker)
+                        Log.i("ssssworker",selectedWorker.toString())
+                        // Navigate to the details screen
+                        navController.navigate("carpenterDetails")
+                    }
                 }
             }
         }
@@ -126,13 +136,14 @@ fun PlumberListScreen(viewModel: PlumberCatViewModel = viewModel()) {
 }
 
 @Composable
-fun PlumberItem(plumber: Worker) {
+fun PlumberItem(plumber: Worker , onItemClick:  (Worker) -> Unit) {
     var isFavorite by remember { mutableStateOf(SharedPreferencesManager.getFavorites().any { it.name == plumber.name }) }
 
     Card(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onItemClick(plumber) } ,
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -206,5 +217,5 @@ fun PlumberItem(plumber: Worker) {
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    PlumberListScreen()
+
 }

@@ -43,7 +43,7 @@ fun workerHome(navController :NavController){
 @Composable
 fun AvailabilitySection() {
     val viewModel =WorkerHomeViewModel()
-    val availability by viewModel.availability.observeAsState(false)
+    val availability by viewModel.availability.observeAsState(true)
 
     Column(
         modifier = Modifier

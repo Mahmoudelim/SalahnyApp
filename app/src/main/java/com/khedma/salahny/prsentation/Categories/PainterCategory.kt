@@ -1,6 +1,8 @@
 package com.khedma.salahny.prsentation.Categories
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.khedma.salahny.R
 import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.data.Worker
@@ -49,7 +52,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PainterListScreen(viewModel: painterCatViewModel = viewModel()) {
+fun PainterListScreen(viewModel: painterCatViewModel = viewModel(),navController: NavController,workerViewModel: WorkerViewModel) {
     val context = LocalContext.current
     var painters by remember { mutableStateOf<List<Worker>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -102,8 +105,15 @@ fun PainterListScreen(viewModel: painterCatViewModel = viewModel()) {
             }
             // If not loading, display the list of plumbers
             LazyColumn {
-                items(filteredPainters) { plumber ->
-                    PainterItem(plumber)
+                items(filteredPainters) { carpenter ->
+                    PainterItem(carpenter) {
+                            selectedWorker ->
+                        // Set the selected worker in the ViewModel
+                        workerViewModel.selectWorker(selectedWorker)
+                        Log.i("ssssworker",selectedWorker.toString())
+                        // Navigate to the details screen
+                        navController.navigate("carpenterDetails")
+                    }
                 }
             }
         }
@@ -111,13 +121,14 @@ fun PainterListScreen(viewModel: painterCatViewModel = viewModel()) {
 }
 
 @Composable
-fun PainterItem(painter: Worker) {
+fun PainterItem(painter: Worker , onItemClick:  (Worker) -> Unit ) {
     var isFavorite by remember { mutableStateOf(SharedPreferencesManager.getFavorites().any { it.name == painter.name }) }
 
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onItemClick(painter) },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp

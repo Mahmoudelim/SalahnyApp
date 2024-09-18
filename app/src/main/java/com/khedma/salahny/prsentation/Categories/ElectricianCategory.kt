@@ -1,5 +1,7 @@
 package com.khedma.salahny.prsentation.Categories
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.khedma.salahny.R
 import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.data.Worker
@@ -48,7 +51,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel()) {
+fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel() ,  workrViewModel: WorkerViewModel, navController:NavController) {
     val context = LocalContext.current
     var Electrician by remember { mutableStateOf<List<Worker>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -101,8 +104,15 @@ fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel()) {
 
             // If not loading, display the list of plumbers
             LazyColumn {
-                items(filteredElectrician) { plumber ->
-                    ElectricianItem(plumber)
+                items(filteredElectrician) { carpenter ->
+                    ElectricianItem(carpenter) {
+                            selectedWorker ->
+                        // Set the selected worker in the ViewModel
+                        workrViewModel.selectWorker(selectedWorker)
+                        Log.i("ssssworker",selectedWorker.toString())
+                        // Navigate to the details screen
+                        navController.navigate("carpenterDetails")
+                    }
                 }
             }
         }
@@ -110,13 +120,13 @@ fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel()) {
 }
 
 @Composable
-fun ElectricianItem(electricin: Worker) {
+fun ElectricianItem(electricin: Worker,onItemClick:  (Worker) -> Unit) {
     var isFavorite by remember { mutableStateOf(SharedPreferencesManager.getFavorites().any { it.name == electricin.name }) }
 
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth().clickable { onItemClick(electricin)},
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp

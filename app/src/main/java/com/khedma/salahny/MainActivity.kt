@@ -46,16 +46,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.google.android.play.integrity.internal.w
 import com.khedma.salahny.WorkerRequests.RequestScreen
 import com.khedma.salahny.WorkerRequests.requestViewModel
 import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.prsentation.Categories.CarpenterDetailsScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterListScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterViewModel
+import com.khedma.salahny.prsentation.Categories.ElectricianCatViewModel
 import com.khedma.salahny.prsentation.Categories.ElectricianListScreen
 import com.khedma.salahny.prsentation.Categories.PainterListScreen
+import com.khedma.salahny.prsentation.Categories.PlumberCatViewModel
 import com.khedma.salahny.prsentation.Categories.PlumberListScreen
 import com.khedma.salahny.prsentation.Categories.WorkerViewModel
+import com.khedma.salahny.prsentation.Categories.painterCatViewModel
 import com.khedma.salahny.prsentation.ClientHome.AppBar
 import com.khedma.salahny.prsentation.ClientHome.BottomNavigationBar
 import com.khedma.salahny.prsentation.ClientHome.ClientHomeScreen
@@ -153,7 +157,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel,requestViewModel: requestV
                 SignUpScreenForWorker(navController)
             }
             composable("Plumber") {
-                PlumberListScreen()
+                PlumberListScreen(viewModel = PlumberCatViewModel(), navController = navController, workerViewModel = workerViewModel)
             }
             composable("Carpenter") {
 
@@ -164,10 +168,11 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel,requestViewModel: requestV
                 CarpenterDetailsScreen(workerViewModel = workerViewModel)
             }
             composable("Painter") {
-                PainterListScreen()
+                PainterListScreen(viewModel = painterCatViewModel(), navController = navController,
+                    workerViewModel)
             }
             composable("Electrician") {
-                ElectricianListScreen()
+                ElectricianListScreen(viewModel = ElectricianCatViewModel(), navController = navController, workrViewModel = workerViewModel)
             }
             composable("signUpclient") {
                 SignUpForClient(navController = navController)

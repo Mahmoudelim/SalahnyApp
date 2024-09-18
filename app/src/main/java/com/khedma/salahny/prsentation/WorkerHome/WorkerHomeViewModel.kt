@@ -20,7 +20,7 @@ class WorkerHomeViewModel :ViewModel() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (data in snapshot.children) {
-                        val isAvailable = data.child("availability").getValue(Boolean::class.java) ?: true
+                        val isAvailable = data.child("isAvailable").getValue(Boolean::class.java) ?: true
                         _availability.value = isAvailable
                     }
                 }

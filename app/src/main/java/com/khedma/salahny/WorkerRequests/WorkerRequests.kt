@@ -56,10 +56,9 @@ fun RequestScreen(viewModel: requestViewModel, workerPhone: String) {
                     RequestItem(
                         request = request,
                         onAccept = { acceptedRequest ->
-                            // Handle accept action here (e.g., update the request in the database)
                         },
                         onIgnore = { ignoredRequest ->
-                            // Handle ignore action here (e.g., update the request as ignored)
+
                         }
                     )
 
@@ -94,7 +93,7 @@ fun RequestItem(request: Request,
         ) {
             Text(text = "You have a Request Service From: ${request.name}", style = MaterialTheme.typography.body1)
             Text(text = "his Phone: ${request.phone}", style = MaterialTheme.typography.body2)
-            Text(text =timeAgoText, style = MaterialTheme.typography.caption)
+            Text(text =vm.timeAgo(request.timeStamp), style = MaterialTheme.typography.caption)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly ,
