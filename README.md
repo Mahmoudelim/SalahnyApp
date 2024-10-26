@@ -11,6 +11,7 @@
   - **Authentication**: Secure user login and registration using Firebase Authentication.
   - **Real-Time Database**: Store and retrieve worker information, availability, and user requests in real time.
 - **Worker Categories**: Easily find workers by category, including carpenters, plumbers, electricians, etc.
+- **Filter Workers**: Filter worker by nearest and available workers
 - **Favorites**: Mark preferred workers for quick access.
 - **Data Retrieval with Retrofit**: Retrieve worker information from Firebase using the Retrofit library.
 - **MVVM Architecture**: Ensures maintainability and testability of code by separating business logic from UI.
@@ -33,7 +34,7 @@
 <img src="https://github.com/user-attachments/assets/e3a9f00d-c5cf-4974-8d88-10d8ac1e3e8b" width="300">
 
 ### Worker List
-<img src="https://github.com/user-attachments/assets/d5a31641-53cd-450d-9a3c-e988c604b733" width="300">
+<img src="https://github.com/user-attachments/assets/073c2a1f-5634-48ad-a089-4ecde1576563" width="300">
 <img src="https://github.com/user-attachments/assets/b7b0efb4-2ff2-4976-8a16-7717bd468841" width="300">
 
 ### Request Screen
