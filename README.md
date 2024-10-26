@@ -1,5 +1,6 @@
 
- Salahny App
+
+# Salahny App
 
 **Salahny** is an Android application designed to connect users with irregular workers, such as carpenters, plumbers, electricians, and more, for home repair and maintenance needs. Built with Jetpack Compose for a modern UI experience, Salahny leverages Firebase for backend services, including user authentication and real-time data synchronization, providing users with a seamless and reliable way to find and connect with skilled workers.
 
@@ -22,11 +23,30 @@
 - **Backend**: Firebase (Realtime Database, Authentication)
 - **Networking**: Retrofit
 
+## Setup and Installation
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/yourusername/salahny-app.git
+   ```
+
+2. **Open the Project**:
+   Open the project in Android Studio.
+
+3. **Configure Firebase**:
+   - Set up a Firebase project and add your Android app to it.
+   - Download the `google-services.json` file and place it in the `app/` directory.
+
+4. **Run the App**:
+   Build and run the app on an emulator or physical device.
 
 ## Screenshots
 
 *(Include screenshots here if possible)*
 
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 --- 
 
