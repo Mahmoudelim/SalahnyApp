@@ -28,6 +28,11 @@
 
 *(Include screenshots here if possible)*
 ![Screenshot_20241026-101610](https://github.com/user-attachments/assets/e3a9f00d-c5cf-4974-8d88-10d8ac1e3e8b)
+![Screenshot_20241026-101636](https://github.com/user-attachments/assets/d5a31641-53cd-450d-9a3c-e988c604b733)
+![Screenshot_20241026-101704](https://github.com/user-attachments/assets/b7b0efb4-2ff2-4976-8a16-7717bd468841)
+![Screenshot_20241026-104338](https://github.com/user-attachments/assets/2ab9259c-9fdf-44a9-984c-34ae2f05b304)
+![Screenshot_20241026-103613](https://github.com/user-attachments/assets/5f0c67de-b7be-4a9d-b59b-176686118887)
+![Screenshot_20241026-104323](https://github.com/user-attachments/assets/d82c7394-8084-4ffa-9eec-054875b91ff0)
 
 
 --- 
