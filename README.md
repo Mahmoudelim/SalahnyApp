@@ -27,6 +27,7 @@
 ## Screenshots
 
 *(Include screenshots here if possible)*
+![Screenshot_20241026-101610](https://github.com/user-attachments/assets/e3a9f00d-c5cf-4974-8d88-10d8ac1e3e8b)
 
 
 --- 
