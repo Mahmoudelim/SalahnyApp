@@ -1,4 +1,5 @@
 package com.khedma.salahny.prsentation.Categories
+import ElectricianCatViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -64,7 +65,7 @@ fun ElectricianListScreen(viewModel: ElectricianCatViewModel = viewModel() ,  wo
         delay(2000)
 
         // Fetch data
-        Electrician = viewModel.getSortedWorker(context)
+        Electrician = viewModel.getWorkerByProfession()
 
         // After fetching data, set loading to false
         isLoading = false

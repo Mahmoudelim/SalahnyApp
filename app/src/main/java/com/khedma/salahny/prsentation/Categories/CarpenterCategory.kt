@@ -1,5 +1,6 @@
 package com.khedma.salahny.prsentation.Categories
 
+import CarpenterViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -45,7 +46,7 @@ fun CarpenterListScreen(viewModel: CarpenterViewModel = viewModel(), navControll
         delay(2000)
 
         // Fetch data
-        carpenters = viewModel.getSortedWorker(context)
+        carpenters = viewModel.getWorkerByProfession()
 
         // After fetching data, set loading to false
         isLoading = false

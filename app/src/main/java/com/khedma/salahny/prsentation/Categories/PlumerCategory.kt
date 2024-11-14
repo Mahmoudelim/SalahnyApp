@@ -79,7 +79,8 @@ fun PlumberListScreen(viewModel: PlumberCatViewModel = viewModel() , navControll
         delay(2000)
 
         // Fetch data
-        plumbers = viewModel.getSortedWorker(context)
+        plumbers = viewModel.getWorkerByProfession()
+
 
         // After fetching data, set loading to false
         isLoading = false

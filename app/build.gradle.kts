@@ -1,10 +1,10 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
-  
+    id ("com.android.application")
+    id ("org.jetbrains.kotlin.android")
+    id ("com.google.gms.google-services")
+    id("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
 
 }
 
@@ -25,14 +25,36 @@ android {
         }
     }
 
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName(BuildTypes.RELEASE) {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            isMinifyEnabled = Build.Release.isMinifyEnabled
+            enableUnitTestCoverage = Build.Release.enableUnitTestCoverage
+            isDebuggable = Build.Release.isDebuggable
         }
+        getByName(BuildTypes.DEBUG) {
+            isMinifyEnabled = Build.Debug.isMinifyEnabled
+            enableUnitTestCoverage = Build.Debug.enableUnitTestCoverage
+            isDebuggable = Build.Debug.isDebuggable
+            versionNameSuffix = Build.Debug.versionNameSuffix
+            applicationIdSuffix = Build.Debug.applicationIdSuffix
+        }
+        create(BuildTypes.RELEASE_EXTERNAL_QA) {
+            isMinifyEnabled = Build.ReleaseExternalQa.isMinifyEnabled
+            enableUnitTestCoverage = Build.ReleaseExternalQa.enableUnitTestCoverage
+            isDebuggable = Build.ReleaseExternalQa.isDebuggable
+            versionNameSuffix = Build.ReleaseExternalQa.versionNameSuffix
+            applicationIdSuffix = Build.ReleaseExternalQa.applicationIdSuffix
+        }
+    }
+    flavorDimensions.add(BuildDimensions.APP)
+    productFlavors {
+        BuildFlavor.Client.create(this)
+        BuildFlavor.Worker.create(this)
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -44,8 +66,9 @@ android {
     buildFeatures {
         compose = true
     }
+
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -55,7 +78,12 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.dagger:hilt-android:2.51.1")
+// Hilt compiler for annotation processing
 
+// Hilt navigation for Jetpack Compose
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation ("com.google.accompanist:accompanist-permissions:0.24.13-rc")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")

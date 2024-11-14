@@ -66,7 +66,7 @@ fun PainterListScreen(viewModel: painterCatViewModel = viewModel(),navController
         delay(2000)
 
         // Fetch data
-        painters = viewModel.getSortedWorker(context)
+        painters = viewModel.getWorkerByProfession()
 
         // After fetching data, set loading to false
         isLoading = false

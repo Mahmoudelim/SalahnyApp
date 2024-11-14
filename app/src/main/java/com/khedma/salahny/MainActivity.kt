@@ -1,5 +1,7 @@
 package com.khedma.salahny
 
+import CarpenterViewModel
+import ElectricianCatViewModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -47,13 +49,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.android.play.integrity.internal.w
+import com.khedma.salahny.Repoistory.SalahlyRepo
 import com.khedma.salahny.WorkerRequests.RequestScreen
 import com.khedma.salahny.WorkerRequests.requestViewModel
+import com.khedma.salahny.data.SalahlyApiService
 import com.khedma.salahny.data.SharedPreferencesManager
 import com.khedma.salahny.prsentation.Categories.CarpenterDetailsScreen
 import com.khedma.salahny.prsentation.Categories.CarpenterListScreen
-import com.khedma.salahny.prsentation.Categories.CarpenterViewModel
-import com.khedma.salahny.prsentation.Categories.ElectricianCatViewModel
 import com.khedma.salahny.prsentation.Categories.ElectricianListScreen
 import com.khedma.salahny.prsentation.Categories.PainterListScreen
 import com.khedma.salahny.prsentation.Categories.PlumberCatViewModel
@@ -112,7 +114,7 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel,requestViewModel: requestV
             else -> "WorkerLogin"
         }
     } else {
-        "welcome"
+        "welcome2"
     }
 
     LaunchedEffect(Unit) {
@@ -125,17 +127,20 @@ fun salahlyAroundApp(workerViewModel: WorkerViewModel,requestViewModel: requestV
             AppBar()
         },
         bottomBar = {
-            if (isLoggedIn) {
-                when (userRole) {
-                    "worker" -> WorkerBottomNavigationBar(navController = navController)
-                    "client" -> BottomNavigationBar(navController = navController)
-                }
-            }
+            BottomNavigationBar(navController = navController)
+
+
         }
     ) { innerPadding ->
         NavHost(navController = navController, startDestination = "splash", Modifier.padding(innerPadding)) {
             composable(route = "splash") {
                 SplashScreen()
+            }
+            composable("welcome2") {
+                WelcomeScreen(
+                    onLoginClick = { navController.navigate("ClientLogin") },
+                    onRegisterClick = { navController.navigate("signUpclient") }
+                )
             }
             composable(route = "favourite") {
                 FavoritesScreen()
